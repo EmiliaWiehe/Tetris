@@ -1,18 +1,28 @@
 # Tetris
 ## Requirements:
--familiarize with Pygame library            # done
--use keys to move and turn obstacles around # done
--displaty current score                     # done
--increase pace and level over time          
--function to hold obstacle for later 
--function to pause game                     # done
+- familiarize with Pygame library            # done
+- use keys to move and turn obstacles around # done
+- displaty current score                     # done
+- increase pace and level over time          # done    
+- function to hold obstacle for later 
+- function to pause game                     # done
 
 ## Things to do:
-- function to hold tetrominoes
-- improve scoring system + level
-- docstrings
-- music?
-- (improve color and figure configuration)
+- ! change variable and method names 
+- improve level system
+- !! docstrings
+- bag system (random figures)
+- movement options when at ground
+
+## Extras
+- user name
+- start from higher level
+- highscore
+- music volume
+
+## Questions:
+- how much compared to original tetris
+
 
 ## Project Documentation (~2 pages):
 First of all: don’t confuse this with the documentation in your code. You should write your

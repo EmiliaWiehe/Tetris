@@ -1,41 +1,5 @@
 # class for each tetrominos
 import random
-"""class Tetrominoes:
-    def __init__(self):
-        pass
-    
-    # 7 different Tetrominoes
-    # L ___| 
-    def orange_ricky(self):
-        pass
-
-    # J |___
-    def blue_ricky(self):
-        pass
-
-    # I _____ light blue
-    def hero(self):
-        pass
-
-    # T __|__ purple
-    def teewee(self):
-        pass
-
-    # O [] yellow
-    def smashboy(self):
-        pass
-
-    # Z -|_ red
-    def cleveland_z(self):
-        pass
-
-    # S _|- green
-    def rhode_island_z(self):
-        pass
-
-    def get_random_tetrominoes(self):
-        pass
-"""
 class Tetrominoes:
     x = 0
     y = 0
@@ -47,25 +11,25 @@ class Tetrominoes:
     8   9   10  11
     12  13  14  15
     """
-    # they should all have 4 positions, except block
     Tetrominoes = [
-        [[1, 5, 9, 13], [4, 5, 6, 7]],  # Gerade
-        [[1, 2, 5, 9], [4, 5, 6, 10], [1, 5, 9, 8], [0, 4, 5, 6]],  # Rev L
-        [[1, 2, 6, 10], [3, 5, 6, 7], [2, 6, 10, 11], [5, 6, 7, 9]],  # L
-        [[1, 2, 5, 6]],  # BLOCK
-        [[6, 7, 9, 10], [1, 5, 6, 10]],  # S
-        [[1, 4, 5, 6], [1, 5, 6, 9], [4, 5, 6, 9], [1, 4, 5, 9]],  # T
-        [[4, 5, 9, 10], [2, 6, 5, 9]],  # Reverse S
+        [[4, 5, 6, 7], [2, 6, 10, 14], [8, 9, 10, 11], [1, 5, 9, 13]], # I
+        [[0, 4, 5, 6], [1, 2, 5, 9], [4, 5, 6, 10], [1, 5, 9, 8]],     # J
+        [[4, 5, 6, 2], [1, 5, 9, 10], [8, 4, 5, 6], [0, 1, 5, 9]],     # L
+        [[1, 2, 5, 6]],                                                # O
+        [[4, 5, 1, 2], [1, 5, 6, 10], [8, 9, 5, 6], [0, 4, 5, 9]],     # S
+        [[1, 4, 5, 6], [1, 5, 6, 9], [4, 5, 6, 9], [1, 4, 5, 9]],      # T
+        [[0, 1, 5, 6], [2, 6, 5, 9], [4, 5, 9, 10], [1, 5, 4, 8]],     # Z
     ]
+
     colors = [
                 (0,0,0),       # space holder
-                (0,240,240),   # I
-                (0,0,240),     # J
-                (240,0,160),   # L
-                (0,240,0),     # S
-                (240, 240, 0), # O
-                (160,0,240),   # T
-                (240,0,0)      # Z
+                (82,239,250),   # I
+                (40,137,24),     # J
+                (255,170,41),   # L
+                (255, 236, 51), # O
+                (53,240,78),     # S
+                (166,36,252),   # T
+                (252,36,58)      # Z
             ]
 
     def __init__(self, x_coord, y_coord):
@@ -83,5 +47,3 @@ class Tetrominoes:
 
     def rotate_left(self):
         self.rotation = (self.rotation - 1) % len(self.Tetrominoes[self.type])
-
-
