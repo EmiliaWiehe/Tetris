@@ -4,17 +4,19 @@
 - use keys to move and turn obstacles around # done
 - displaty current score                     # done
 - increase pace and level over time          # done    
-- function to hold obstacle for later 
+- function to hold obstacle for later        # done
 - function to pause game                     # done
 
 ## Things to do:
 - ! change variable and method names 
+- improve hold function (can be used multiple times)
 - improve level system
 - !! docstrings
 - bag system (random figures)
 - movement options when at ground
 
 ## Extras
+- instructions pause
 - user name
 - start from higher level
 - highscore
@@ -22,7 +24,7 @@
 
 ## Questions:
 - how much compared to original tetris
-
+- what should be in the class and what in main
 
 ## Project Documentation (~2 pages):
 First of all: don’t confuse this with the documentation in your code. You should write your
@@ -38,6 +40,7 @@ Some points to focus on:
 Programming Journey
 What additional things (libraries, paradigms, etc) did you learn during the
 project?
+- pygame
 What challenges did you face?
 How did you approach them?
 What further additions could be made

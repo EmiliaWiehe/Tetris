@@ -41,7 +41,10 @@ BLACK = (0,0,0)
 # game loop
 while not done:
     counter_frames += 1
+    # check if level up is possible
     game.level_up()
+
+    # moving tetrominoes constantly down
     if game.state == "start" and (counter_frames % z == 0):
         game.move_down()
 
@@ -152,7 +155,6 @@ while not done:
                         ],
                         just_border,
                     )
-
                     # draw the shadow
                     color = WHITE
                     just_border = 1
@@ -165,19 +167,19 @@ while not done:
                     )
 
     # display the score
-    score_font = pygame.font.SysFont("Calibri", 30, False, False)
+    score_font = pygame.font.SysFont("Calibri", 30, True, False)
     text_score = score_font.render("Score: " + str(game.score), True, WHITE)
     screen.blit(text_score, [20,40])
 
     # display the current level
-    level_font = pygame.font.SysFont("Calibri", 30, False, False)
-    text_level = level_font.render("Level: " + str(game.level), True, WHITE)
+    text_level = score_font.render("Level: " + str(game.level), True, WHITE)
     screen.blit(text_level, [20,80])
 
     # display the function hold
-    hold_font = pygame.font.SysFont("Calibri", 30, False, False)
+    hold_font = pygame.font.SysFont("Calibri", 50, True, False)
     text_hold = hold_font.render("Hold ", True, WHITE)
-    screen.blit(text_hold, [20, 350])
+    screen.blit(text_hold, [65, 310])
+    pygame.draw.rect(screen, WHITE, [40, 360, 150, 150], 1)
     if game.hold_draw:
         for i in range(4):
             for j in range(4):
@@ -186,26 +188,19 @@ while not done:
                     pygame.draw.rect(
                         screen,
                         game.hold_figure.color,
-                            [
-                                20 + j * zoom,
-                                400 + i * zoom,
-                                zoom,
-                                zoom,
-                            ],
+                        [70 + j * zoom, 400 + i * zoom, zoom, zoom],
                         )
-                    color = GRAY
-                    just_border = 1
                     pygame.draw.rect(
                         screen,
-                        color,
-                        [20 + j * zoom, 400 + i * zoom, zoom, zoom],
-                        just_border,
+                        GRAY,
+                        [70 + j * zoom, 400 + i * zoom, zoom, zoom],
+                        1,
                     )
 
     # display the function next
-    next_font = pygame.font.SysFont("Calibri", 30, False, False)
-    text_next = next_font.render("Next ", True, WHITE)
-    screen.blit(text_next, [550,40])
+    text_next = hold_font.render("Next ", True, WHITE)
+    screen.blit(text_next, [560,40])
+    pygame.draw.rect(screen, WHITE, [535, 90, 150, 150], 1)
     for i in range(4):
         for j in range(4):
             p = i * 4 + j
@@ -213,29 +208,17 @@ while not done:
                 pygame.draw.rect(
                     screen,
                     game.next_figure.color,
-                        [
-                            475 + (j + game.next_figure.x) * zoom,
-                            100 + (i + game.next_figure.y) * zoom,
-                            zoom,
-                            zoom,
-                        ],
+                        [475 + (j + game.next_figure.x) * zoom, 130 + (i + game.next_figure.y) * zoom, zoom, zoom,],
                     )
-                color = GRAY
-                just_border = 1
                 pygame.draw.rect(
                     screen,
-                    color,
-                    [
-                            475 + (j + game.next_figure.x) * zoom,
-                            100 + (i + game.next_figure.y) * zoom,
-                            zoom,
-                            zoom,
-                    ],
-                    just_border,
+                    GRAY,
+                    [475 + (j + game.next_figure.x) * zoom, 130 + (i + game.next_figure.y) * zoom, zoom, zoom,],
+                    1,  
                 )
 
     # display pause
-    pause_font = pygame.font.SysFont("Calibri", 20, False, False)
+    pause_font = pygame.font.SysFont("Calibri", 20, True, False)
     text_pause = pause_font.render("Press P to pause", True, WHITE)
     screen.blit(text_pause, [550,350])
 

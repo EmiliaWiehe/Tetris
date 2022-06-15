@@ -2,11 +2,15 @@ from Tetrominoes import Tetrominoes
 import copy
 import pygame
 class Tetris:
-    Tetrominoes = None
     def __init__(self, _height, _width):
+        """_summary_
+
+        Args:
+            _height (_type_): _description_
+            _width (_type_): _description_
+        """        
         self.height = _height
         self.width = _width
-        #self.field = [[0]*_width]*_height
         self.hold_figure = None
         self.Tetrominoes = None
         self.field = []
@@ -17,6 +21,7 @@ class Tetris:
         self.hold_draw = False
         self.state = "start"
         self.hold_bool = False
+        #self.field = [[0]*_width]*_height
         for _ in range(_height):
             new_line = []
             for _ in range(_width):
@@ -27,13 +32,15 @@ class Tetris:
 
     
     def new_figure(self):
+        """_summary_
+        """        
         if self.counter == 0:
             self.next_figure = Tetrominoes(3, 0)
             self.counter += 1
 
         if self.hold_bool:
-            self.hold_figure.x = 3
-            self.hold_figure.y = 0
+            # set start coordinates
+            self.hold_figure.x, self.hold_figure.y  = 3, 0
             self.Tetrominoes = self.hold_figure
             self.hold_bool = False
             self.hold_draw = False
@@ -41,12 +48,18 @@ class Tetris:
             self.Tetrominoes = self.next_figure
             self.next_figure = Tetrominoes(3, 0)
 
+        # if the figure collides instantly with another figure, the player loses
         if not self.hold_bool and self.intersects(self.Tetrominoes):
             self.state = "gameover"
             return
 
 
     def pause(self, screen):
+        """_summary_
+
+        Args:
+            screen (_type_): _description_
+        """        
         paused = True
         pygame.mixer.music.pause()
         while paused:
@@ -55,12 +68,15 @@ class Tetris:
                     pygame.quit()
                     quit()
                 if event.type == pygame.KEYDOWN:
+                    # continue the game
                     if event.key == pygame.K_c:
                         paused = False
                         pygame.mixer.music.unpause()
+                    # quit the game
                     if event.key == pygame.K_q:
                         pygame.quit()
                         quit()
+            # display the pause screen
             screen.fill((255, 255, 255))
             pause_font = pygame.font.SysFont("Calibri", 65, False, False)
             pause2_font = pygame.font.SysFont("Calibri", 20, False, False)
@@ -71,12 +87,19 @@ class Tetris:
             pygame.display.update()
 
     def game_over(self, screen, mixer):
+        """_summary_
+
+        Args:
+            screen (_type_): _description_
+            mixer (_type_): _description_
+        """        
         end = False
         while not end:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
+            # display the game over screen
             gameover_font = pygame.font.SysFont("Calibri", 65, True, False)
             text_gameover = gameover_font.render("Game Over!", True, (255, 0, 245))
             score_font = pygame.font.SysFont("Calibri", 50, False, False)
@@ -90,6 +113,11 @@ class Tetris:
             pygame.display.update()
 
     def new_shadow(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """        
         self.shadow = copy.copy(self.Tetrominoes)
         intersection = False
         while not intersection:
@@ -104,12 +132,19 @@ class Tetris:
         return self.shadow.y 
 
     def move_down(self):
+        """_summary_
+        """        
         self.Tetrominoes.y += 1
         if self.intersects():
             self.Tetrominoes.y -= 1
             self.freeze()
    
     def side(self, dx):
+        """_summary_
+
+        Args:
+            dx (_type_): _description_
+        """        
         old_x = self.Tetrominoes.x
         edge = False
         for i in range(4):
@@ -128,12 +163,18 @@ class Tetris:
             self.Tetrominoes.x = old_x
 
     def left(self):
+        """_summary_
+        """        
         self.side(-1)
 
     def right(self):
+        """_summary_
+        """        
         self.side(1)
 
     def hard_drop(self):
+        """_summary_
+        """        
         while not self.intersects():
             self.Tetrominoes.y += 1
             self.score += 2
@@ -141,6 +182,8 @@ class Tetris:
         self.freeze()
 
     def soft_drop(self):
+        """_summary_
+        """        
         old_tetro = self.Tetrominoes.y
         self.Tetrominoes.y += 1
         if self.intersects():
@@ -148,6 +191,8 @@ class Tetris:
         self.score += 1
 
     def rotate_right(self):
+        """ rotates the tetromino to 90 degrees to the right. 
+        """        
         old_rotation = self.Tetrominoes.rotation
         self.Tetrominoes.rotate_right()
         for i in range(4):
@@ -160,6 +205,8 @@ class Tetris:
             self.Tetrominoes.rotation = old_rotation
         
     def rotate_left(self):
+        """ rotates the tetromino to 90 degrees to the left.
+        """        
         old_rotation = self.Tetrominoes.rotation
         self.Tetrominoes.rotate_left()
         for i in range(4):
@@ -173,6 +220,8 @@ class Tetris:
             self.Tetrominoes.rotation = old_rotation
 
     def hold(self): 
+        """_summary_
+        """        
         if self.hold_counter == 0:
             self.hold_bool = False
             self.hold_draw = True
@@ -185,17 +234,20 @@ class Tetris:
             self.hold_counter = 0
 
     def level_up(self):
+        """_summary_
+        """        
         if (self.score + 1) % (100 * self.level) == 0:
             self.level += 1
             
     def intersects(self, fig=None):
-        """
-        checks if the tetrominoes collides with the bottom or another figure
-            Attr:
-                fig(object): Is an object of the class Tetrominoes (default is none)
-            Returns:
-                True if fig collides with the bottom or another figure
-        """
+        """_summary_
+
+        Args:
+            fig (_type_, optional): _description_. Defaults to None.
+
+        Returns:
+            _type_: _description_
+        """  
         fig = self.Tetrominoes if (fig is None) else fig
         intersection = False
         for i in range(4):
@@ -210,6 +262,8 @@ class Tetris:
         return intersection
 
     def freeze(self):
+        """_summary_
+        """        
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
@@ -219,6 +273,8 @@ class Tetris:
         self.new_figure()
 
     def break_lines(self):
+        """_summary_
+        """        
         lines = 0
         for i in range(1, self.height):
             zeros = 0
@@ -230,5 +286,5 @@ class Tetris:
                 for i2 in range(i, 1, -1):
                     for j in range(self.width):
                         self.field[i2][j] = self.field[i2 - 1][j]
-
+        # update score
         self.score += lines ** 2 * self.level

@@ -33,6 +33,12 @@ class Tetrominoes:
             ]
 
     def __init__(self, x_coord, y_coord):
+        """_summary_
+
+        Args:
+            x_coord (_type_): _description_
+            y_coord (_type_): _description_
+        """        
         self.x = x_coord
         self.y = y_coord
         self.type = random.randint(0, len(self.Tetrominoes) - 1)
@@ -40,10 +46,19 @@ class Tetrominoes:
         self.color = self.colors[self.type + 1]
 
     def image(self):
-        return self.Tetrominoes[self.type][self.rotation]
+        """_summary_
 
+        Returns:
+            _type_: _description_
+        """        
+        return self.Tetrominoes[self.type][self.rotation]
+        
     def rotate_right(self):
+        """_summary_
+        """        
         self.rotation = (self.rotation + 1) % len(self.Tetrominoes[self.type])
 
     def rotate_left(self):
+        """_summary_
+        """        
         self.rotation = (self.rotation - 1) % len(self.Tetrominoes[self.type])
