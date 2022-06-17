@@ -1,19 +1,17 @@
 # Tetris
 ## Requirements:
-- familiarize with Pygame library            # done
-- use keys to move and turn obstacles around # done
-- displaty current score                     # done
-- increase pace and level over time          # done    
-- function to hold obstacle for later        # done
-- function to pause game                     # done
+- familiarize with Pygame library             # done
+- use keys to move and turn obstacles around  # done
+- display current score                       # done
+- increase pace and level over time           # done    
+- function to hold obstacle for later         # done
+- function to pause game                      # done
 
 ## Things to do:
-- ! change variable and method names 
-- improve hold function (can be used multiple times)
 - improve level system
 - !! docstrings
-- bag system (random figures)
-- movement options when at ground
+- bag system (random figures) 
+- hold function can only be used once
 
 ## Extras
 - instructions pause
@@ -21,10 +19,16 @@
 - start from higher level
 - highscore
 - music volume
+- extra sound for landing, when hold was used
 
 ## Questions:
 - how much compared to original tetris
 - what should be in the class and what in main
+
+## readme
+- how to play
+- what is required to do so
+
 
 ## Project Documentation (~2 pages):
 First of all: don’t confuse this with the documentation in your code. You should write your
@@ -42,6 +46,7 @@ What additional things (libraries, paradigms, etc) did you learn during the
 project?
 - pygame
 What challenges did you face?
+The bag system was difficult
 How did you approach them?
 What further additions could be made
 Show us your results

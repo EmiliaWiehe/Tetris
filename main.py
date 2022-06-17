@@ -2,7 +2,7 @@ import pygame
 from pygame import mixer
 from Tetris import Tetris
 from Tetrominoes import Tetrominoes
-
+    
 pygame.init()
 
 screen = pygame.display.set_mode((750, 670))
@@ -105,12 +105,12 @@ while not done:
 
     # draw the background 
     screen.blit(background, (0,0))
-
+    pygame.draw.rect(screen, WHITE, [225, 30, 300, 600], 1)
     # draw the tetrominoes 
     for i in range(game.height):
         for j in range(game.width):
             if game.field[i][j] > 0:
-                color = Tetrominoes.colors[game.field[i][j]]
+                color = Tetrominoes.colors[game.field[i][j]] # [game.field[i][j]]
                 just_border = 0
                 pygame.draw.rect(
                     screen,
@@ -131,10 +131,10 @@ while not done:
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
-                if p in game.Tetrominoes.image():
+                if p in game.Tetrominoes.image(game.tetromino_type):
                     pygame.draw.rect(
                         screen,
-                        game.Tetrominoes.color,
+                        game.Tetrominoes.get_color(game.tetromino_type),
                         [
                             225 + (j + game.Tetrominoes.x) * zoom,
                             30 + (i + game.Tetrominoes.y) * zoom,
@@ -184,10 +184,10 @@ while not done:
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
-                if p in game.hold_figure.image():
+                if p in game.hold_figure.image(game.hold_type):
                     pygame.draw.rect(
                         screen,
-                        game.hold_figure.color,
+                        game.hold_figure.get_color(game.hold_type),
                         [70 + j * zoom, 400 + i * zoom, zoom, zoom],
                         )
                     pygame.draw.rect(
@@ -196,7 +196,7 @@ while not done:
                         [70 + j * zoom, 400 + i * zoom, zoom, zoom],
                         1,
                     )
-
+ 
     # display the function next
     text_next = hold_font.render("Next ", True, WHITE)
     screen.blit(text_next, [560,40])
@@ -204,10 +204,10 @@ while not done:
     for i in range(4):
         for j in range(4):
             p = i * 4 + j
-            if p in game.next_figure.image():
+            if p in game.next_figure.image(game.next_type):
                 pygame.draw.rect(
                     screen,
-                    game.next_figure.color,
+                    game.next_figure.get_color(game.next_type),
                         [475 + (j + game.next_figure.x) * zoom, 130 + (i + game.next_figure.y) * zoom, zoom, zoom,],
                     )
                 pygame.draw.rect(

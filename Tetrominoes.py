@@ -11,7 +11,7 @@ class Tetrominoes:
     8   9   10  11
     12  13  14  15
     """
-    Tetrominoes = [
+    tetrominoes = [
         [[4, 5, 6, 7], [2, 6, 10, 14], [8, 9, 10, 11], [1, 5, 9, 13]], # I
         [[0, 4, 5, 6], [1, 2, 5, 9], [4, 5, 6, 10], [1, 5, 9, 8]],     # J
         [[4, 5, 6, 2], [1, 5, 9, 10], [8, 4, 5, 6], [0, 1, 5, 9]],     # L
@@ -31,6 +31,7 @@ class Tetrominoes:
                 (166,36,252),   # T
                 (252,36,58)      # Z
             ]
+   
 
     def __init__(self, x_coord, y_coord):
         """_summary_
@@ -41,24 +42,27 @@ class Tetrominoes:
         """        
         self.x = x_coord
         self.y = y_coord
-        self.type = random.randint(0, len(self.Tetrominoes) - 1)
         self.rotation = 0
-        self.color = self.colors[self.type + 1]
+        #self.type = Tetris.bag()
+        #self.color = self.colors[self.type + 1]
 
-    def image(self):
+    def get_color(self, type):
+        return self.colors[type + 1]
+        
+    def image(self, type):
         """_summary_
 
         Returns:
             _type_: _description_
         """        
-        return self.Tetrominoes[self.type][self.rotation]
+        return self.tetrominoes[type][self.rotation]
         
-    def rotate_right(self):
+    def rotate_right(self, type):
         """_summary_
         """        
-        self.rotation = (self.rotation + 1) % len(self.Tetrominoes[self.type])
+        self.rotation = (self.rotation + 1) % len(self.tetrominoes[type])
 
-    def rotate_left(self):
+    def rotate_left(self, type):
         """_summary_
         """        
-        self.rotation = (self.rotation - 1) % len(self.Tetrominoes[self.type])
+        self.rotation = (self.rotation - 1) % len(self.tetrominoes[type])

@@ -1,7 +1,9 @@
 from Tetrominoes import Tetrominoes
 import copy
 import pygame
+import random
 class Tetris:
+    bag_idx_list = [0,1,2,3,4,5,6]
     def __init__(self, _height, _width):
         """_summary_
 
@@ -21,6 +23,8 @@ class Tetris:
         self.hold_draw = False
         self.state = "start"
         self.hold_bool = False
+        self.type = 0
+        #self.tetromino_type = 0
         #self.field = [[0]*_width]*_height
         for _ in range(_height):
             new_line = []
@@ -30,29 +34,46 @@ class Tetris:
         self.new_figure()
         self.new_shadow()
 
+
     
     def new_figure(self):
         """_summary_
         """        
         if self.counter == 0:
             self.next_figure = Tetrominoes(3, 0)
-            self.counter += 1
+            self.next_type = self.type
+            self.counter = 1
 
         if self.hold_bool:
             # set start coordinates
             self.hold_figure.x, self.hold_figure.y  = 3, 0
             self.Tetrominoes = self.hold_figure
+            self.hold_type = self.next_type
             self.hold_bool = False
             self.hold_draw = False
         else: 
+            self.tetromino_type = self.next_type
             self.Tetrominoes = self.next_figure
             self.next_figure = Tetrominoes(3, 0)
+            self.next_type = self.type
 
         # if the figure collides instantly with another figure, the player loses
         if not self.hold_bool and self.intersects(self.Tetrominoes):
             self.state = "gameover"
             return
 
+    def bag(self):
+        if self.bag_idx_list == []:
+            self.bag_idx_list = [0, 1, 2, 3, 4, 5, 6]
+            random.shuffle(self.bag_idx_list)
+            print(self.bag_idx_list)
+            self.type = self.bag_idx_list[0]
+            self.bag_idx_list.pop(0)
+        else: 
+            random.shuffle(self.bag_idx_list)
+            print(self.bag_idx_list)
+            self.type = self.bag_idx_list[0]
+            self.bag_idx_list.pop(0)
 
     def pause(self, screen):
         """_summary_
@@ -125,7 +146,7 @@ class Tetris:
             for i in range(4):
                 for j in range(4):
                     p = i * 4 + j
-                    if p in self.shadow.image():
+                    if p in self.shadow.image(self.type):
                         if (i + self.shadow.y  > self.height - 1  or self.field[i + self.shadow.y ][j + self.shadow.x] > 0 ):
                             intersection = True
         self.shadow.y -= 1
@@ -150,7 +171,7 @@ class Tetris:
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
-                if p in self.Tetrominoes.image():
+                if p in self.Tetrominoes.image(self.type):
                     if (
                         j + self.Tetrominoes.x + dx > self.width - 1  # beyond right border
                         or j + self.Tetrominoes.x + dx < 0  # beyond left border
@@ -194,11 +215,11 @@ class Tetris:
         """ rotates the tetromino to 90 degrees to the right. 
         """        
         old_rotation = self.Tetrominoes.rotation
-        self.Tetrominoes.rotate_right()
+        self.Tetrominoes.rotate_right(self.type)
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
-                if p in self.Tetrominoes.image():
+                if p in self.Tetrominoes.image(self.type):
                     if j + self.Tetrominoes.x > self.width - 1 or j + self.Tetrominoes.x < 0:
                         self.Tetrominoes.rotation = old_rotation
         if self.intersects():
@@ -208,31 +229,35 @@ class Tetris:
         """ rotates the tetromino to 90 degrees to the left.
         """        
         old_rotation = self.Tetrominoes.rotation
-        self.Tetrominoes.rotate_left()
+        self.Tetrominoes.rotate_left(self.type)
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
-                if p in self.Tetrominoes.image():
+                if p in self.Tetrominoes.image(self.type):
                     if j + self.Tetrominoes.x > self.width - 1 or \
                             j + self.Tetrominoes.x < 0:
                         self.Tetrominoes.rotation = old_rotation
         if self.intersects():
             self.Tetrominoes.rotation = old_rotation
 
+
+
+
     def hold(self): 
         """_summary_
-        """        
-        if self.hold_counter == 0:
-            self.hold_bool = False
-            self.hold_draw = True
-            self.hold_figure = copy.copy(self.Tetrominoes)
-            self.Tetrominoes = None
-            self.new_figure()
-            self.hold_counter += 1
-        else:
-            self.hold_bool = True
-            self.hold_counter = 0
-
+        """     
+        if self.hold_counter <= 1:
+            if self.hold_counter == 0:
+                self.hold_bool = False
+                self.hold_draw = True
+                self.hold_figure = copy.copy(self.Tetrominoes)
+                self.Tetrominoes = None
+                self.new_figure()
+                self.hold_counter += 1
+            else:
+                self.hold_bool = True
+                self.hold_counter += 1
+        
     def level_up(self):
         """_summary_
         """        
@@ -253,7 +278,7 @@ class Tetris:
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
-                if p in fig.image():
+                if p in fig.image(self.type):
                     if (
                         i + fig.y > self.height - 1  # bottom intersection
                         or self.field[i + fig.y][j + fig.x] > 0 # figure intersection
@@ -267,9 +292,10 @@ class Tetris:
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
-                if p in self.Tetrominoes.image():
-                    self.field[i + self.Tetrominoes.y][j + self.Tetrominoes.x] = (self.Tetrominoes.type + 1)
+                if p in self.Tetrominoes.image(self.type):
+                    self.field[i + self.Tetrominoes.y][j + self.Tetrominoes.x] = (self.type + 1)
         self.break_lines()
+        self.bag()
         self.new_figure()
 
     def break_lines(self):
