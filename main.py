@@ -1,29 +1,29 @@
 import pygame
 from pygame import mixer
 from Tetris import Tetris
-from Tetrominoes import Tetrominoes
     
 pygame.init()
 
+# screen
 screen = pygame.display.set_mode((750, 670))
 pygame.display.set_caption("Tetris")
 
-# Music
+# music
 mixer.init()
 mixer.music.load("sounds\Tetris_music.wav")
 mixer.music.play(-1)
 game_over_sound = mixer.Sound("sounds\game_over_2.0.wav")
 
-# Background
+# background
 background = pygame.image.load("images\space_background.jpg")
 background = pygame.transform.scale(background, (750, 670))
 
-# all variables
+# initializing variables
 done = False
 fps = 12
 clock = pygame.time.Clock()
 zoom = 30
-game = Tetris(20, 10)
+game = Tetris(21, 10)
 pressing_down = False
 pressing_left = False
 pressing_right = False
@@ -35,8 +35,6 @@ z = 7
 # basic colors
 WHITE = (255,255,255)
 GRAY = (128,128,128)
-BLACK = (0,0,0)
-
 
 # game loop
 while not done:
@@ -47,46 +45,61 @@ while not done:
     # moving tetrominoes constantly down
     if game.state == "start" and (counter_frames % z == 0):
         game.move_down()
-
+    
+    # gameover state 
     if game.state == "gameover":
         pygame.mixer.music.stop()  
         game_over_sound.play() 
-        game.game_over(screen, mixer)
+        game.game_over(screen)
     
-    # increase pace with level up
-    if old_level < game.level:
+    # increase pace with higher level
+    if old_level < game.level and z > 0:
         z -= 1
         old_level = game.level
-
+        # game state winning champ
+    elif z == 0: 
+        game.state = "win"
+    
+    # event states
     for event in pygame.event.get():
+        # quit state
         if event.type == pygame.QUIT:
             done = True
         
         if event.type == pygame.KEYDOWN and not game.state == "gameover":
-            # rotate to the right
+            # rotate right
             if event.key == pygame.K_UP:
                 game.rotate_right()
-            if event.key == pygame.K_p:
-                game.pause(screen)
-            #rotate to the left
+            
+            # rotate left
             if event.key == pygame.K_z:
                 game.rotate_left()
-            # hard drop
-            if event.key == pygame.K_SPACE:
-                game.hard_drop()
+            
+            # pause
+            if event.key == pygame.K_p:
+                game.pause(screen)
+                
             # hold
             if event.key == pygame.K_c:
                 game.hold()
+                
+            # hard drop
+            if event.key == pygame.K_SPACE:
+                game.hard_drop()
+            
             # soft drop
             if event.key == pygame.K_DOWN:
                 pressing_down = True
-            # moves to the left
+            
+            # moves to left
             if event.key == pygame.K_LEFT:
                 pressing_left = True
-            # moves to the right
+                
+            # moves to right
             if event.key == pygame.K_RIGHT:
                 pressing_right = True
-
+        
+        # only rotate once even if key is pressed longer
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN:
                 pressing_down = False
@@ -94,7 +107,8 @@ while not done:
                 pressing_left = False
             if event.key == pygame.K_RIGHT:
                 pressing_right = False
-            
+    
+    # holding key -> action performed over and over
     if pressing_down:
         game.soft_drop()
     if pressing_left:
@@ -102,126 +116,9 @@ while not done:
     if pressing_right:
         game.right()
         
-
     # draw the background 
-    screen.blit(background, (0,0))
-    pygame.draw.rect(screen, WHITE, [225, 30, 300, 600], 1)
-    # draw the tetrominoes 
-    for i in range(game.height):
-        for j in range(game.width):
-            if game.field[i][j] > 0:
-                color = Tetrominoes.colors[game.field[i][j]] # [game.field[i][j]]
-                just_border = 0
-                pygame.draw.rect(
-                    screen,
-                    color,
-                    [225 + j * zoom, 30 + i * zoom, zoom, zoom],
-                    just_border,
-                )
-                color = GRAY
-                just_border = 1
-                pygame.draw.rect(
-                    screen,
-                    color,
-                    [225 + j * zoom, 30 + i * zoom, zoom, zoom],
-                    just_border,
-                )
-            
-    if game.Tetrominoes is not None:
-        for i in range(4):
-            for j in range(4):
-                p = i * 4 + j
-                if p in game.Tetrominoes.image(game.tetromino_type):
-                    pygame.draw.rect(
-                        screen,
-                        game.Tetrominoes.get_color(game.tetromino_type),
-                        [
-                            225 + (j + game.Tetrominoes.x) * zoom,
-                            30 + (i + game.Tetrominoes.y) * zoom,
-                            zoom,
-                            zoom,
-                        ], 
-                    )
-                    color = GRAY
-                    just_border = 1
-                    pygame.draw.rect(
-                        screen,
-                        color,
-                        [
-                            225 + (j + game.Tetrominoes.x) * zoom,
-                            30 + (i + game.Tetrominoes.y) * zoom,
-                            zoom,
-                            zoom,
-                        ],
-                        just_border,
-                    )
-                    # draw the shadow
-                    color = WHITE
-                    just_border = 1
-                    pygame.draw.rect(
-                        screen,
-                        color,
-                        [225 + (j + game.Tetrominoes.x) * zoom,
-                        30 + (i + game.new_shadow()) * zoom, zoom, zoom],
-                        just_border,
-                    )
-
-    # display the score
-    score_font = pygame.font.SysFont("Calibri", 30, True, False)
-    text_score = score_font.render("Score: " + str(game.score), True, WHITE)
-    screen.blit(text_score, [20,40])
-
-    # display the current level
-    text_level = score_font.render("Level: " + str(game.level), True, WHITE)
-    screen.blit(text_level, [20,80])
-
-    # display the function hold
-    hold_font = pygame.font.SysFont("Calibri", 50, True, False)
-    text_hold = hold_font.render("Hold ", True, WHITE)
-    screen.blit(text_hold, [65, 310])
-    pygame.draw.rect(screen, WHITE, [40, 360, 150, 150], 1)
-    if game.hold_draw:
-        for i in range(4):
-            for j in range(4):
-                p = i * 4 + j
-                if p in game.hold_figure.image(game.hold_type):
-                    pygame.draw.rect(
-                        screen,
-                        game.hold_figure.get_color(game.hold_type),
-                        [70 + j * zoom, 400 + i * zoom, zoom, zoom],
-                        )
-                    pygame.draw.rect(
-                        screen,
-                        GRAY,
-                        [70 + j * zoom, 400 + i * zoom, zoom, zoom],
-                        1,
-                    )
- 
-    # display the function next
-    text_next = hold_font.render("Next ", True, WHITE)
-    screen.blit(text_next, [560,40])
-    pygame.draw.rect(screen, WHITE, [535, 90, 150, 150], 1)
-    for i in range(4):
-        for j in range(4):
-            p = i * 4 + j
-            if p in game.next_figure.image(game.next_type):
-                pygame.draw.rect(
-                    screen,
-                    game.next_figure.get_color(game.next_type),
-                        [475 + (j + game.next_figure.x) * zoom, 130 + (i + game.next_figure.y) * zoom, zoom, zoom,],
-                    )
-                pygame.draw.rect(
-                    screen,
-                    GRAY,
-                    [475 + (j + game.next_figure.x) * zoom, 130 + (i + game.next_figure.y) * zoom, zoom, zoom,],
-                    1,  
-                )
-
-    # display pause
-    pause_font = pygame.font.SysFont("Calibri", 20, True, False)
-    text_pause = pause_font.render("Press P to pause", True, WHITE)
-    screen.blit(text_pause, [550,350])
-
+    game.draw_background(screen, background, zoom)
+    
     pygame.display.flip()
     clock.tick(fps)
 pygame.quit()

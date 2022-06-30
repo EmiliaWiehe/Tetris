@@ -1,6 +1,8 @@
-# class for each tetrominos
+# class of tetrominoes
 import random
+
 class Tetrominoes:
+    
     x = 0
     y = 0
 
@@ -11,6 +13,7 @@ class Tetrominoes:
     8   9   10  11
     12  13  14  15
     """
+    # different rotation figurations for each tetromino
     tetrominoes = [
         [[4, 5, 6, 7], [2, 6, 10, 14], [8, 9, 10, 11], [1, 5, 9, 13]], # I
         [[0, 4, 5, 6], [1, 2, 5, 9], [4, 5, 6, 10], [1, 5, 9, 8]],     # J
@@ -20,49 +23,53 @@ class Tetrominoes:
         [[1, 4, 5, 6], [1, 5, 6, 9], [4, 5, 6, 9], [1, 4, 5, 9]],      # T
         [[0, 1, 5, 6], [2, 6, 5, 9], [4, 5, 9, 10], [1, 5, 4, 8]],     # Z
     ]
-
+    
+    # different colors for each tetromino according to RGB-color-coding
     colors = [
-                (0,0,0),       # space holder
+                (0,0,0),        # space holder
                 (82,239,250),   # I
-                (40,137,24),     # J
+                (40,137,24),    # J
                 (255,170,41),   # L
                 (255, 236, 51), # O
-                (53,240,78),     # S
+                (53,240,78),    # S
                 (166,36,252),   # T
-                (252,36,58)      # Z
+                (252,36,58)     # Z
             ]
    
-
+    
     def __init__(self, x_coord, y_coord):
-        """_summary_
+        """ Initialization of coordinates of tetromino.
 
         Args:
-            x_coord (_type_): _description_
-            y_coord (_type_): _description_
+            x_coord (int/float?): x-coordinate of tetromino 
+            y_coord (int/float?): y-coordinate of tetromino 
         """        
         self.x = x_coord
         self.y = y_coord
         self.rotation = 0
-        #self.type = Tetris.bag()
-        #self.color = self.colors[self.type + 1]
-
-    def get_color(self, type):
-        return self.colors[type + 1]
         
-    def image(self, type):
-        """_summary_
+    def get_color(self, type):
+        """ Returns color of tetromino.
 
         Returns:
-            _type_: _description_
+            tuple: RGB color code of tetromino
+        """
+        return self.colors[type + 1]
+              
+    def image(self, type):
+        """ Returns image of colored tetromino of respective shape
+        
+        Returns:
+            _type_???: shaped tetromino
         """        
         return self.tetrominoes[type][self.rotation]
-        
+           
     def rotate_right(self, type):
-        """_summary_
+        """ Rotation of tetromino to the right
         """        
         self.rotation = (self.rotation + 1) % len(self.tetrominoes[type])
-
+     
     def rotate_left(self, type):
-        """_summary_
+        """ Rotation of tetromino to the left
         """        
         self.rotation = (self.rotation - 1) % len(self.tetrominoes[type])
