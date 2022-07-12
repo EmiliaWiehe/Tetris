@@ -321,6 +321,11 @@ class Tetris:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
+                if event.type == pygame.KEYDOWN:
+                    # quit the game
+                    if event.key == pygame.K_q:
+                        pygame.quit()
+                        quit()
                     
             # display the game over screen
             color = (255, 0, 245)
