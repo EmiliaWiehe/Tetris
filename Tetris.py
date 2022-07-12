@@ -44,11 +44,10 @@ class Tetris:
         """      
         if self.hold_bool:
             # set start coordinates for the hold figure
-            self.hold_figure.x, self.hold_figure.y  = 3, 0
-            self.Tetrominoes = self.hold_figure
-            self.tetromino_type = self.hold_type
+            self.new_hold_figure.x, self.new_hold_figure.y  = 3, 0
+            self.Tetrominoes = self.new_hold_figure
+            self.tetromino_type = self.new_hold_type
             self.hold_bool = False
-            self.hold_draw = False
         else: 
             self.Tetrominoes = self.next_figure
             self.tetromino_type = self.next_type
@@ -194,18 +193,27 @@ class Tetris:
     def hold(self): 
         """ Placing one of the tetrominoes in the hold state to reactivate it later on
         """     
-        if self.hold_counter <= 1:
-            if self.hold_counter == 0:
-                self.hold_bool = False
-                self.hold_draw = True
-                self.hold_figure = copy.copy(self.Tetrominoes)
-                self.hold_type = self.tetromino_type
-                self.Tetrominoes = None
-                self.hold_counter += 1
-                self.new_figure()
-            else:
-                self.hold_bool = True
-                self.hold_counter += 1  
+        # activate only if its the first time this function gets executed
+        if self.counter == 0:
+            self.hold_draw = True
+            self.hold_figure = self.Tetrominoes
+            self.hold_type = self.tetromino_type 
+            self.Tetrominoes = None
+            self.hold_counter += 1
+            self.counter += 1
+            self.new_figure()
+        # counter that the it cant be activated twice in a row 
+        elif self.hold_counter == 0:
+            self.hold_bool = False
+            self.hold_draw = True
+            self.new_hold_figure = self.hold_figure
+            self.new_hold_type = self.hold_type
+            self.hold_figure = self.Tetrominoes
+            self.hold_type = self.tetromino_type
+            self.Tetrominoes = None
+            self.hold_counter += 1
+            self.hold_bool = True
+            self.new_figure()
     
     def level_up(self):
         """ Increasing the current level when respective score thresholds are reached
@@ -338,7 +346,7 @@ class Tetris:
         """   
         screen.blit(background, (0,0))
         WHITE = (255,255,255)
-        pygame.draw.rect(screen, WHITE, [225, 60, 300, 600], 1)
+        pygame.draw.rect(screen, WHITE, [220, 25, 310, 610], 5)
         
         # display the tetrominoes
         for i in range(self.height):
