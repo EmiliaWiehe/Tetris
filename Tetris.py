@@ -1,11 +1,11 @@
 # class for Tetris
-from Tetrominoes import Tetrominoes
+from Tetromino import Tetromino
 import copy
 import pygame
 import random
 
 class Tetris: 
-    # bag indexes to randomly collect tetrominoes from bag
+    # bag indexes to randomly collect Tetromino from bag
     bag_idx_list = [0,1,2,3,4,5,6]
 
     def __init__(self, _height, _width):
@@ -18,8 +18,8 @@ class Tetris:
         self.height = _height
         self.width = _width
         self.hold_figure = None
-        self.Tetrominoes = None
-        self.next_figure = Tetrominoes(3, 0)
+        self.Tetromino = None
+        self.next_figure = Tetromino(3, 0)
         self.next_type = self.bag()
         self.field = []
         self.score = 0
@@ -45,28 +45,28 @@ class Tetris:
         if self.hold_bool:
             # set start coordinates for the hold figure
             self.new_hold_figure.x, self.new_hold_figure.y  = 3, 0
-            self.Tetrominoes = self.new_hold_figure
+            self.Tetromino = self.new_hold_figure
             self.tetromino_type = self.new_hold_type
             self.hold_bool = False
         else: 
-            self.Tetrominoes = self.next_figure
+            self.Tetromino = self.next_figure
             self.tetromino_type = self.next_type
-            self.next_figure = Tetrominoes(3, 0)
+            self.next_figure = Tetromino(3, 0)
             # set the type for the new tetromino  
             self.next_type = self.bag()
 
         # if the figure collides with another figure instantly, the player loses
-        if not self.hold_bool and self.intersects(self.Tetrominoes):
+        if not self.hold_bool and self.intersects(self.Tetromino):
             self.state = "gameover"
             return
     
     def bag(self):
-        """ Picking of a tetromino from the bag of tetrominoes
+        """ Picking of a tetromino from the bag of Tetromino
 
         Returns:
             int: the new type for the next tetromino. Number between 0 - 6.
         """
-        # if there are no more tetrominoes in the bag, fill it up with each once
+        # if there are no more Tetromino in the bag, fill it up with each once
         if self.bag_idx_list == []:
             self.bag_idx_list = [0, 1, 2, 3, 4, 5, 6]
             random.shuffle(self.bag_idx_list)
@@ -87,7 +87,7 @@ class Tetris:
         Returns:
             int: y coordinate of the shadow with the same shape as the current tetromino
         """        
-        self.shadow = copy.copy(self.Tetrominoes)
+        self.shadow = copy.copy(self.Tetromino)
         intersection = False
         while not intersection:
             self.shadow.y += 1
@@ -103,9 +103,9 @@ class Tetris:
     def move_down(self):
         """ Moving down of tetromino
         """        
-        self.Tetrominoes.y += 1
+        self.Tetromino.y += 1
         if self.intersects():
-            self.Tetrominoes.y -= 1
+            self.Tetromino.y -= 1
             self.freeze()
    
     def side(self, dx):
@@ -114,22 +114,22 @@ class Tetris:
         Args:
             dx (int): current x-coordinate of tetromino
         """        
-        old_x = self.Tetrominoes.x
+        old_x = self.Tetromino.x
         edge = False
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
-                if p in self.Tetrominoes.image(self.tetromino_type):
+                if p in self.Tetromino.image(self.tetromino_type):
                     if (
-                        j + self.Tetrominoes.x + dx > self.width - 1  # beyond right border
-                        or j + self.Tetrominoes.x + dx < 0  # beyond left border
+                        j + self.Tetromino.x + dx > self.width - 1  # beyond right border
+                        or j + self.Tetromino.x + dx < 0  # beyond left border
                     ):
                         edge = True
         if not edge:
-            self.Tetrominoes.x += dx
+            self.Tetromino.x += dx
 
         if self.intersects():
-            self.Tetrominoes.x = old_x
+            self.Tetromino.x = old_x
           
     def left(self):
         """ Moving tetromino to left
@@ -145,72 +145,72 @@ class Tetris:
         """ Hard drop of tetromino
         """        
         while not self.intersects():
-            self.Tetrominoes.y += 1
+            self.Tetromino.y += 1
             # update the score
             self.score += 2
-        self.Tetrominoes.y -= 1
+        self.Tetromino.y -= 1
         self.freeze()
     
     def soft_drop(self):
         """ Soft drop of tetromino
         """        
-        old_tetro = self.Tetrominoes.y
-        self.Tetrominoes.y += 1
+        old_tetro = self.Tetromino.y
+        self.Tetromino.y += 1
         if self.intersects():
-            self.Tetrominoes.y = old_tetro
+            self.Tetromino.y = old_tetro
         # update the score
         self.score += 1
 
     def rotate_right(self):
         """ Rotation of tetromino to 90 degrees to the right.
         """        
-        old_rotation = self.Tetrominoes.rotation
-        self.Tetrominoes.rotate_right(self.tetromino_type)
+        old_rotation = self.Tetromino.rotation
+        self.Tetromino.rotate_right(self.tetromino_type)
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
-                if p in self.Tetrominoes.image(self.tetromino_type):
-                    if j + self.Tetrominoes.x > self.width - 1 or j + self.Tetrominoes.x < 0:
-                        self.Tetrominoes.rotation = old_rotation
+                if p in self.Tetromino.image(self.tetromino_type):
+                    if j + self.Tetromino.x > self.width - 1 or j + self.Tetromino.x < 0:
+                        self.Tetromino.rotation = old_rotation
         if self.intersects():
-            self.Tetrominoes.rotation = old_rotation
+            self.Tetromino.rotation = old_rotation
         
     def rotate_left(self):
         """ Rotation of tetromino to 90 degrees to the left
         """        
-        old_rotation = self.Tetrominoes.rotation
-        self.Tetrominoes.rotate_left(self.tetromino_type)
+        old_rotation = self.Tetromino.rotation
+        self.Tetromino.rotate_left(self.tetromino_type)
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
-                if p in self.Tetrominoes.image(self.tetromino_type):
-                    if j + self.Tetrominoes.x > self.width - 1 or \
-                            j + self.Tetrominoes.x < 0:
-                        self.Tetrominoes.rotation = old_rotation
+                if p in self.Tetromino.image(self.tetromino_type):
+                    if j + self.Tetromino.x > self.width - 1 or \
+                            j + self.Tetromino.x < 0:
+                        self.Tetromino.rotation = old_rotation
         if self.intersects():
-            self.Tetrominoes.rotation = old_rotation           
+            self.Tetromino.rotation = old_rotation           
 
     def hold(self): 
-        """ Placing one of the tetrominoes in the hold state to reactivate it later on
+        """ Placing one of the Tetromino in the hold state to reactivate it later on
         """     
         # activate only if its the first time this function gets executed
         if self.counter == 0:
             self.hold_draw = True
-            self.hold_figure = self.Tetrominoes
+            self.hold_figure = self.Tetromino
             self.hold_type = self.tetromino_type 
-            self.Tetrominoes = None
+            self.Tetromino = None
             self.hold_counter += 1
             self.counter += 1
             self.new_figure()
-        # counter that the it cant be activated twice in a row 
+        # counter that the it cannot be activated twice in a row 
         elif self.hold_counter == 0:
             self.hold_bool = False
             self.hold_draw = True
             self.new_hold_figure = self.hold_figure
             self.new_hold_type = self.hold_type
-            self.hold_figure = self.Tetrominoes
+            self.hold_figure = self.Tetromino
             self.hold_type = self.tetromino_type
-            self.Tetrominoes = None
+            self.Tetromino = None
             self.hold_counter += 1
             self.hold_bool = True
             self.new_figure()
@@ -222,7 +222,7 @@ class Tetris:
             self.level += 1          
             
     def intersects(self, fig=None):
-        """ Checking for collision with bottom of game and other tetrominoes
+        """ Checking for collision with bottom of game and other tetromino
 
         Args:
             fig (_type_, optional): _description_. Defaults to None.???
@@ -230,7 +230,7 @@ class Tetris:
         Returns:
             bool: Indication of whether intersection is there or not
         """  
-        fig = self.Tetrominoes if (fig is None) else fig
+        fig = self.Tetromino if (fig is None) else fig
         intersection = False
         for i in range(4):
             for j in range(4):
@@ -249,14 +249,14 @@ class Tetris:
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
-                if p in self.Tetrominoes.image(self.tetromino_type):
-                    self.field[i + self.Tetrominoes.y][j + self.Tetrominoes.x] = (self.tetromino_type + 1)
+                if p in self.Tetromino.image(self.tetromino_type):
+                    self.field[i + self.Tetromino.y][j + self.Tetromino.x] = (self.tetromino_type + 1)
         self.break_lines()
         self.hold_counter = 0
         self.new_figure()
         
     def break_lines(self):
-        """ Removing lines which are fully filled by tetrominoes
+        """ Removing lines which are fully filled by Tetromino
         """        
         lines = 0
         for i in range(1, self.height):
@@ -353,11 +353,11 @@ class Tetris:
         WHITE = (255,255,255)
         pygame.draw.rect(screen, WHITE, [220, 25, 310, 610], 5)
         
-        # display the tetrominoes
+        # display the Tetromino
         for i in range(self.height):
             for j in range(self.width):
                 if self.field[i][j] > 0:
-                    color = Tetrominoes.colors[self.field[i][j]] 
+                    color = Tetromino.colors[self.field[i][j]] 
                     just_border = 0
                     pygame.draw.rect(
                         screen,
@@ -375,17 +375,17 @@ class Tetris:
                     )
                 
         # display moving tetromino
-        if self.Tetrominoes is not None:
+        if self.Tetromino is not None:
             for i in range(4):
                 for j in range(4):
                     p = i * 4 + j
-                    if p in self.Tetrominoes.image(self.tetromino_type):
+                    if p in self.Tetromino.image(self.tetromino_type):
                         pygame.draw.rect(
                             screen,
-                            self.Tetrominoes.get_color(self.tetromino_type),
+                            self.Tetromino.get_color(self.tetromino_type),
                             [
-                                225 + (j + self.Tetrominoes.x) * zoom,
-                                30 + (i + self.Tetrominoes.y) * zoom,
+                                225 + (j + self.Tetromino.x) * zoom,
+                                30 + (i + self.Tetromino.y) * zoom,
                                 zoom,
                                 zoom,
                             ], 
@@ -396,20 +396,20 @@ class Tetris:
                             screen,
                             color,
                             [
-                                225 + (j + self.Tetrominoes.x) * zoom,
-                                30 + (i + self.Tetrominoes.y) * zoom,
+                                225 + (j + self.Tetromino.x) * zoom,
+                                30 + (i + self.Tetromino.y) * zoom,
                                 zoom,
                                 zoom,
                             ],
                             just_border,
                         )
-                        # draw the shadow
+                        # display the shadow
                         color = (255,255,255)
                         just_border = 1
                         pygame.draw.rect(
                             screen,
                             color,
-                            [225 + (j + self.Tetrominoes.x) * zoom,
+                            [225 + (j + self.Tetromino.x) * zoom,
                             30 + (i + self.new_shadow()) * zoom, zoom, zoom],
                             just_border,
                         )

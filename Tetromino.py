@@ -1,7 +1,7 @@
-# class of tetrominoes
+# class of tetromino
 import random
 
-class Tetrominoes:
+class Tetromino:
     
     x = 0
     y = 0
@@ -14,7 +14,7 @@ class Tetrominoes:
     12  13  14  15
     """
     # different rotation figurations for each tetromino
-    tetrominoes = [
+    tetromino = [
         [[4, 5, 6, 7], [2, 6, 10, 14], [8, 9, 10, 11], [1, 5, 9, 13]], # I
         [[0, 4, 5, 6], [1, 2, 5, 9], [4, 5, 6, 10], [1, 5, 9, 8]],     # J
         [[4, 5, 6, 2], [1, 5, 9, 10], [8, 4, 5, 6], [0, 1, 5, 9]],     # L
@@ -62,14 +62,14 @@ class Tetrominoes:
         Returns:
             _type_???: shaped tetromino
         """        
-        return self.tetrominoes[type][self.rotation]
+        return self.tetromino[type][self.rotation]
            
     def rotate_right(self, type):
         """ Rotation of tetromino to the right
         """        
-        self.rotation = (self.rotation + 1) % len(self.tetrominoes[type])
+        self.rotation = (self.rotation + 1) % len(self.tetromino[type])
      
     def rotate_left(self, type):
         """ Rotation of tetromino to the left
         """        
-        self.rotation = (self.rotation - 1) % len(self.tetrominoes[type])
+        self.rotation = (self.rotation - 1) % len(self.tetromino[type])

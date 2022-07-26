@@ -42,7 +42,7 @@ while not done:
     # check if level up is possible
     game.level_up()
 
-    # moving tetrominoes constantly down
+    # moving Tetromino constantly down
     if game.state == "start" and (counter_frames % z == 0):
         game.move_down()
     
@@ -56,13 +56,10 @@ while not done:
     if old_level < game.level and z > 0:
         z -= 1
         old_level = game.level
-        # game state winning champ
-    elif z == 0: 
-        game.state = "win"
     
     # event states
     for event in pygame.event.get():
-        # quit state
+        # quit statve
         if event.type == pygame.QUIT:
             done = True
         
@@ -80,7 +77,7 @@ while not done:
                 game.pause(screen)
                 
             # hold
-            if event.key == pygame.K_c:
+            if event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
                 game.hold()
                 
             # hard drop
