@@ -59,7 +59,7 @@ while not done:
     
     # event states
     for event in pygame.event.get():
-        # quit statve
+        # quit state
         if event.type == pygame.QUIT:
             done = True
         

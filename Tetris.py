@@ -29,6 +29,7 @@ class Tetris:
         self.hold_draw = False
         self.state = "start"
         self.hold_bool = False
+        self.level_threshold = 200
         
         for _ in range(_height):
             new_line = []
@@ -218,8 +219,10 @@ class Tetris:
     def level_up(self):
         """ Increasing the current level when respective score thresholds are reached
         """        
-        if (self.score + 1) % (100 * self.level) == 0:
-            self.level += 1          
+        if(self.score) >= (self.level_threshold):
+            print(self.score)
+            self.level += 1
+            self.level_threshold *= 1.5          
             
     def intersects(self, fig=None):
         """ Checking for collision with bottom of game and other tetromino
