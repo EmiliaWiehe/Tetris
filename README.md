@@ -12,7 +12,7 @@
 
 *Installation* 
 - activate your conda environment 
-- make sure the required libraries (random, copy, pygame) are Installed 
+- make sure the required libraries (random, copy, pygame) are installed 
  
 *Running*   
 The program is divided into 3 files containing python code: 'main', 'Tetris', and 'Tetrominoes'. While the 'Tetrominoes' class manages the construction of new Tetrominoes, the 'Tetris' class manages all other pre-requirements and interactions possible. 'Main' contains the actual game loop which is accessing the functions from the other classes. The game can be started by running the 'main' file. 
