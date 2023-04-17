@@ -1,5 +1,6 @@
 ## Tetris Game 
 
+![image](https://user-images.githubusercontent.com/103066738/232494931-519fa2f3-a269-4cab-8d3b-fdd839c935a1.png)
 
 # Table of Components 
 
